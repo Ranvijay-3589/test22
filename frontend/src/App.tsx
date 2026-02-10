@@ -12,6 +12,7 @@ import ClassList from "./pages/ClassList";
 import ClassForm from "./pages/ClassForm";
 import SubjectList from "./pages/SubjectList";
 import SubjectForm from "./pages/SubjectForm";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   const { user, loading, logout } = useAuth();
@@ -44,6 +45,7 @@ function App() {
           <NavLink to="/teachers">Teachers</NavLink>
           <NavLink to="/classes">Classes</NavLink>
           <NavLink to="/subjects">Subjects</NavLink>
+          <NavLink to="/change-password">Change Password</NavLink>
         </nav>
         <div className="sidebar-footer">
           <div className="user-info">
@@ -70,6 +72,7 @@ function App() {
           <Route path="/subjects" element={<SubjectList />} />
           <Route path="/subjects/new" element={<SubjectForm />} />
           <Route path="/subjects/:id/edit" element={<SubjectForm />} />
+          <Route path="/change-password" element={<ChangePassword />} />
         </Routes>
       </main>
     </div>

@@ -7,7 +7,7 @@ import hmac
 
 from ..database import get_db
 from ..models.user import User
-from ..schemas.auth import LoginRequest, RegisterRequest, UserResponse, TokenResponse
+from ..schemas.auth import LoginRequest, RegisterRequest, ChangePasswordRequest, UserResponse, TokenResponse
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -105,6 +105,23 @@ def get_me(db: Session = Depends(get_db), token: str = None):
     if not user:
         raise HTTPException(status_code=401, detail="User not found")
     return UserResponse.model_validate(user)
+
+
+@router.post("/change-password")
+def change_password(data: ChangePasswordRequest, token: str = None, db: Session = Depends(get_db)):
+    if not token or token not in active_tokens:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    user_id = active_tokens[token]
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=401, detail="User not found")
+    if not verify_password(data.current_password, user.hashed_password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+    if len(data.new_password) < 6:
+        raise HTTPException(status_code=400, detail="New password must be at least 6 characters")
+    user.hashed_password = hash_password(data.new_password)
+    db.commit()
+    return {"message": "Password changed successfully"}
 
 
 @router.post("/logout")

@@ -417,3 +417,8 @@ tr:hover td {
     transform: rotate(360deg);
   }
 }
+
+/* Change Password */
+.change-password-card {
+  max-width: 480px;
+}

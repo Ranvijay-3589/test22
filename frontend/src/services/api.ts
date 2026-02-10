@@ -30,6 +30,9 @@ export const getCurrentUser = (token: string) =>
 export const logoutUser = (token: string) =>
   api.post("/auth/logout", null, { params: { token } }).then((r) => r.data);
 
+export const changePassword = (token: string, current_password: string, new_password: string) =>
+  api.post("/auth/change-password", { current_password, new_password }, { params: { token } }).then((r) => r.data);
+
 // Students
 export const getStudents = (search?: string) =>
   api.get<Student[]>("/students/", { params: { search } }).then((r) => r.data);
