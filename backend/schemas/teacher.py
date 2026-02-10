@@ -3,21 +3,24 @@ from typing import Optional
 
 
 class TeacherCreate(BaseModel):
-    name: str
+    first_name: str
+    last_name: str
     email: str
-    phone: Optional[str] = None
+    department: Optional[str] = None
 
 
 class TeacherUpdate(BaseModel):
-    name: Optional[str] = None
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
     email: Optional[str] = None
-    phone: Optional[str] = None
+    department: Optional[str] = None
 
 
 class TeacherResponse(BaseModel):
     id: int
-    name: str
+    first_name: str
+    last_name: str
     email: str
-    phone: Optional[str] = None
+    department: Optional[str] = None
 
     model_config = {"from_attributes": True}

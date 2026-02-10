@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 
 from database import get_db
-from models import Subject
+from models.subject import Subject
 from schemas.subject import SubjectCreate, SubjectUpdate, SubjectResponse
 
 router = APIRouter()
@@ -18,10 +18,13 @@ def list_subjects(
 ):
     query = db.query(Subject)
     if search:
-        query = query.filter(Subject.name.ilike(f"%{search}%"))
-    if teacher_id:
+        query = query.filter(
+            Subject.name.ilike(f"%{search}%")
+            | Subject.code.ilike(f"%{search}%")
+        )
+    if teacher_id is not None:
         query = query.filter(Subject.teacher_id == teacher_id)
-    if class_id:
+    if class_id is not None:
         query = query.filter(Subject.class_id == class_id)
     return query.all()
 
@@ -35,30 +38,33 @@ def get_subject(subject_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/", response_model=SubjectResponse, status_code=201)
-def create_subject(data: SubjectCreate, db: Session = Depends(get_db)):
-    subject = Subject(**data.model_dump())
-    db.add(subject)
+def create_subject(subject: SubjectCreate, db: Session = Depends(get_db)):
+    existing = db.query(Subject).filter(Subject.code == subject.code).first()
+    if existing:
+        raise HTTPException(status_code=400, detail="Subject code already exists")
+    db_subject = Subject(**subject.model_dump())
+    db.add(db_subject)
     db.commit()
-    db.refresh(subject)
-    return subject
+    db.refresh(db_subject)
+    return db_subject
 
 
 @router.put("/{subject_id}", response_model=SubjectResponse)
-def update_subject(subject_id: int, data: SubjectUpdate, db: Session = Depends(get_db)):
-    subject = db.query(Subject).filter(Subject.id == subject_id).first()
-    if not subject:
+def update_subject(subject_id: int, subject: SubjectUpdate, db: Session = Depends(get_db)):
+    db_subject = db.query(Subject).filter(Subject.id == subject_id).first()
+    if not db_subject:
         raise HTTPException(status_code=404, detail="Subject not found")
-    for key, value in data.model_dump(exclude_unset=True).items():
-        setattr(subject, key, value)
+    for key, value in subject.model_dump(exclude_unset=True).items():
+        setattr(db_subject, key, value)
     db.commit()
-    db.refresh(subject)
-    return subject
+    db.refresh(db_subject)
+    return db_subject
 
 
 @router.delete("/{subject_id}", status_code=204)
 def delete_subject(subject_id: int, db: Session = Depends(get_db)):
-    subject = db.query(Subject).filter(Subject.id == subject_id).first()
-    if not subject:
+    db_subject = db.query(Subject).filter(Subject.id == subject_id).first()
+    if not db_subject:
         raise HTTPException(status_code=404, detail="Subject not found")
-    db.delete(subject)
+    db.delete(db_subject)
     db.commit()

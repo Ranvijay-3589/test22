@@ -4,12 +4,14 @@ from typing import Optional
 
 class SubjectCreate(BaseModel):
     name: str
+    code: str
     teacher_id: Optional[int] = None
     class_id: Optional[int] = None
 
 
 class SubjectUpdate(BaseModel):
     name: Optional[str] = None
+    code: Optional[str] = None
     teacher_id: Optional[int] = None
     class_id: Optional[int] = None
 
@@ -17,6 +19,7 @@ class SubjectUpdate(BaseModel):
 class SubjectResponse(BaseModel):
     id: int
     name: str
+    code: str
     teacher_id: Optional[int] = None
     class_id: Optional[int] = None
 
