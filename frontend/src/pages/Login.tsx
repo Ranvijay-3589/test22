@@ -1,13 +1,14 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-function Login() {
-  const { login, register, error, clearError } = useAuth();
-  const [isRegister, setIsRegister] = useState(false);
+interface LoginProps {
+  onSwitchToSignup: () => void;
+}
+
+function Login({ onSwitchToSignup }: LoginProps) {
+  const { login, error, clearError } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -15,19 +16,10 @@ function Login() {
     clearError();
     setLoading(true);
     try {
-      if (isRegister) {
-        await register(username, email, fullName, password);
-      } else {
-        await login(username, password);
-      }
+      await login(username, password);
     } finally {
       setLoading(false);
     }
-  };
-
-  const toggleMode = () => {
-    setIsRegister(!isRegister);
-    clearError();
   };
 
   return (
@@ -36,7 +28,7 @@ function Login() {
         <div className="login-header">
           <div className="login-logo">SM</div>
           <h1>School Management</h1>
-          <p>{isRegister ? "Create your account" : "Sign in to your account"}</p>
+          <p>Sign in to your account</p>
         </div>
 
         {error && <div className="alert alert-error">{error}</div>}
@@ -55,33 +47,6 @@ function Login() {
             />
           </div>
 
-          {isRegister && (
-            <>
-              <div className="form-group">
-                <label htmlFor="email">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="fullName">Full Name</label>
-                <input
-                  id="fullName"
-                  type="text"
-                  value={fullName}
-                  onChange={(e) => setFullName(e.target.value)}
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-            </>
-          )}
-
           <div className="form-group">
             <label htmlFor="password">Password</label>
             <input
@@ -95,19 +60,15 @@ function Login() {
           </div>
 
           <button type="submit" className="btn btn-primary login-btn" disabled={loading}>
-            {loading
-              ? "Please wait..."
-              : isRegister
-              ? "Create Account"
-              : "Sign In"}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
 
         <div className="login-footer">
           <p>
-            {isRegister ? "Already have an account?" : "Don't have an account?"}{" "}
-            <button type="button" className="link-btn" onClick={toggleMode}>
-              {isRegister ? "Sign In" : "Sign Up"}
+            Don't have an account?{" "}
+            <button type="button" className="link-btn" onClick={onSwitchToSignup}>
+              Sign Up
             </button>
           </p>
         </div>

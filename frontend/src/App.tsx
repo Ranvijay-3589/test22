@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Routes, Route, NavLink } from "react-router-dom";
 import { useAuth } from "./context/AuthContext";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import Dashboard from "./pages/Dashboard";
 import StudentList from "./pages/StudentList";
 import StudentForm from "./pages/StudentForm";
@@ -13,6 +15,7 @@ import SubjectForm from "./pages/SubjectForm";
 
 function App() {
   const { user, loading, logout } = useAuth();
+  const [authPage, setAuthPage] = useState<"login" | "signup">("login");
 
   if (loading) {
     return (
@@ -24,7 +27,11 @@ function App() {
   }
 
   if (!user) {
-    return <Login />;
+    return authPage === "signup" ? (
+      <Signup onSwitchToLogin={() => setAuthPage("login")} />
+    ) : (
+      <Login onSwitchToSignup={() => setAuthPage("signup")} />
+    );
   }
 
   return (

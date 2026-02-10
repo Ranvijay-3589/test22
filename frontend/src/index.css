@@ -344,6 +344,22 @@ tr:hover td {
   text-decoration: underline;
 }
 
+/* Signup page */
+.signup-card {
+  max-width: 480px;
+}
+.signup-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+@media (max-width: 520px) {
+  .signup-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
 /* Sidebar footer */
 .sidebar-footer {
   margin-top: auto;
