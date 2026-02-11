@@ -3,36 +3,6 @@ import type { Student, Teacher, Class, Subject } from "../types";
 
 const api = axios.create({ baseURL: "/api" });
 
-// Auth
-interface AuthUser {
-  id: number;
-  username: string;
-  email: string;
-  full_name: string;
-  role: string;
-}
-
-interface TokenResponse {
-  access_token: string;
-  token_type: string;
-  user: AuthUser;
-}
-
-export const loginUser = (username: string, password: string) =>
-  api.post<TokenResponse>("/auth/login", { username, password }).then((r) => r.data);
-
-export const registerUser = (username: string, email: string, full_name: string, password: string) =>
-  api.post<TokenResponse>("/auth/register", { username, email, full_name, password }).then((r) => r.data);
-
-export const getCurrentUser = (token: string) =>
-  api.get<AuthUser>("/auth/me", { params: { token } }).then((r) => r.data);
-
-export const logoutUser = (token: string) =>
-  api.post("/auth/logout", null, { params: { token } }).then((r) => r.data);
-
-export const changePassword = (token: string, current_password: string, new_password: string) =>
-  api.post("/auth/change-password", { current_password, new_password }, { params: { token } }).then((r) => r.data);
-
 // Students
 export const getStudents = (search?: string) =>
   api.get<Student[]>("/students/", { params: { search } }).then((r) => r.data);

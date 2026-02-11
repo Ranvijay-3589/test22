@@ -1,35 +1,12 @@
-import { useState } from 'react'
 import { Routes, Route, NavLink } from 'react-router-dom'
-import { useAuth } from './context/AuthContext'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
 import './App.css'
 
 function App() {
-  const { user, loading, logout } = useAuth()
-  const [showSignup, setShowSignup] = useState(false)
-
-  if (loading) {
-    return (
-      <div className="loading-screen">
-        <div className="login-logo">SM</div>
-        <p>Loading...</p>
-      </div>
-    )
-  }
-
-  if (!user) {
-    if (showSignup) {
-      return <Signup onSwitchToLogin={() => setShowSignup(false)} />
-    }
-    return <Login onSwitchToSignup={() => setShowSignup(true)} />
-  }
-
   return (
     <div className="app">
       <aside className="sidebar">
@@ -54,15 +31,6 @@ function App() {
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
         </nav>
-        <div className="sidebar-footer">
-          <div className="user-info">
-            <span className="user-name">{user.full_name}</span>
-            <span className="user-role">{user.role}</span>
-          </div>
-          <button className="btn btn-sm btn-secondary" onClick={logout}>
-            Logout
-          </button>
-        </div>
       </aside>
       <main className="main-content">
         <Routes>
