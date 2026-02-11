@@ -1,12 +1,23 @@
-import { Routes, Route, NavLink } from 'react-router-dom'
+import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { useAuth } from './context/AuthContext'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
+import Login from './pages/Login'
 import './App.css'
 
-function App() {
+function ProtectedLayout() {
+  const { user, logout } = useAuth()
+
+  const initials = user?.full_name
+    ?.split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase()
+    .slice(0, 2) || 'U'
+
   return (
     <div className="app">
       <aside className="sidebar">
@@ -31,6 +42,18 @@ function App() {
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
         </nav>
+        <div className="sidebar-user">
+          <div className="sidebar-user-info">
+            <div className="user-avatar">{initials}</div>
+            <div className="user-details">
+              <div className="user-name">{user?.full_name}</div>
+              <div className="user-role">{user?.role}</div>
+            </div>
+          </div>
+          <button className="logout-btn" onClick={logout} title="Sign out">
+            &#x2192;
+          </button>
+        </div>
       </aside>
       <main className="main-content">
         <Routes>
@@ -39,10 +62,34 @@ function App() {
           <Route path="/teachers" element={<Teachers />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/subjects" element={<Subjects />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
   )
+}
+
+function App() {
+  const { user, isLoading } = useAuth()
+
+  if (isLoading) {
+    return (
+      <div className="loading-page">
+        <div className="spinner" />
+      </div>
+    )
+  }
+
+  if (!user) {
+    return (
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    )
+  }
+
+  return <ProtectedLayout />
 }
 
 export default App

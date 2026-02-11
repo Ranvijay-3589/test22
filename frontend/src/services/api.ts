@@ -1,7 +1,17 @@
 import axios from "axios";
-import type { Student, Teacher, Class, Subject } from "../types";
+import type { Student, Teacher, Class, Subject, TokenResponse, LoginRequest } from "../types";
 
 const api = axios.create({ baseURL: "/api" });
+
+// Auth
+export const login = (data: LoginRequest) =>
+  api.post<TokenResponse>("/auth/login", data).then((r) => r.data);
+
+export const getMe = (token: string) =>
+  api.get<{ id: number; username: string; email: string; full_name: string; role: string }>("/auth/me", { params: { token } }).then((r) => r.data);
+
+export const logout = (token: string) =>
+  api.post("/auth/logout", null, { params: { token } });
 
 // Students
 export const getStudents = (search?: string) =>
