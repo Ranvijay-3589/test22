@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-function Login() {
+interface LoginProps {
+  onSwitchToSignup: () => void;
+}
+
+function Login({ onSwitchToSignup }: LoginProps) {
   const { login, error, clearError } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -59,6 +63,15 @@ function Login() {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
+
+        <div className="login-footer">
+          <p>
+            Don't have an account?{" "}
+            <a href="#" onClick={(e) => { e.preventDefault(); onSwitchToSignup(); }}>
+              Sign Up
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,15 +1,14 @@
-from datetime import datetime, timedelta, timezone
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 import hashlib
 import secrets
 import hmac
 
-from ..database import get_db
-from ..models.user import User
-from ..schemas.auth import LoginRequest, RegisterRequest, ChangePasswordRequest, UserResponse, TokenResponse
+from database import get_db
+from models import User
+from schemas.auth import LoginRequest, RegisterRequest, ChangePasswordRequest, UserResponse, TokenResponse
 
-router = APIRouter(prefix="/api/auth", tags=["auth"])
+router = APIRouter()
 
 SECRET_KEY = secrets.token_hex(32)
 TOKEN_EXPIRY_HOURS = 24
@@ -40,7 +39,6 @@ def get_current_user(
     db: Session = Depends(get_db),
     token: str = None,
 ) -> User:
-    """Dependency to extract the current user from the Authorization header."""
     if not token or token not in active_tokens:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

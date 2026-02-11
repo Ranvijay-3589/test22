@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import engine, Base
-from routes import students, teachers, classes, subjects
+from routes import students, teachers, classes, subjects, auth
 
 # Create all tables
 Base.metadata.create_all(bind=engine)
@@ -23,6 +23,7 @@ app.include_router(students.router, prefix="/api/students", tags=["Students"])
 app.include_router(teachers.router, prefix="/api/teachers", tags=["Teachers"])
 app.include_router(classes.router, prefix="/api/classes", tags=["Classes"])
 app.include_router(subjects.router, prefix="/api/subjects", tags=["Subjects"])
+app.include_router(auth.router, prefix="/api/auth", tags=["Auth"])
 
 
 @app.get("/health")

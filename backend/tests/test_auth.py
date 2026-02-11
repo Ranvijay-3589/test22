@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
-from app.models.user import User
-from app.routes.auth import hash_password, create_token
-from app.database import get_db
+from models import User
+from routes.auth import hash_password, create_token
+from database import get_db
 from main import app
 
 
@@ -19,6 +19,66 @@ def _create_user(username: str, email: str, full_name: str, password: str):
     db.refresh(user)
     token = create_token(user.id)
     return user, token
+
+
+def test_register(client: TestClient):
+    res = client.post("/api/auth/register", json={
+        "username": "newuser",
+        "email": "new@school.com",
+        "full_name": "New User",
+        "password": "secret123",
+    })
+    assert res.status_code == 200
+    data = res.json()
+    assert data["access_token"]
+    assert data["user"]["username"] == "newuser"
+    assert data["user"]["email"] == "new@school.com"
+    assert data["user"]["full_name"] == "New User"
+
+
+def test_register_duplicate_username(client: TestClient):
+    client.post("/api/auth/register", json={
+        "username": "dupeuser",
+        "email": "dupe1@school.com",
+        "full_name": "Dupe User",
+        "password": "secret123",
+    })
+    res = client.post("/api/auth/register", json={
+        "username": "dupeuser",
+        "email": "dupe2@school.com",
+        "full_name": "Dupe User 2",
+        "password": "secret123",
+    })
+    assert res.status_code == 400
+    assert "Username already exists" in res.json()["detail"]
+
+
+def test_register_duplicate_email(client: TestClient):
+    client.post("/api/auth/register", json={
+        "username": "emailuser1",
+        "email": "same@school.com",
+        "full_name": "Email User 1",
+        "password": "secret123",
+    })
+    res = client.post("/api/auth/register", json={
+        "username": "emailuser2",
+        "email": "same@school.com",
+        "full_name": "Email User 2",
+        "password": "secret123",
+    })
+    assert res.status_code == 400
+    assert "Email already exists" in res.json()["detail"]
+
+
+def test_register_short_password(client: TestClient):
+    res = client.post("/api/auth/register", json={
+        "username": "shortpass",
+        "email": "short@school.com",
+        "full_name": "Short Pass",
+        "password": "abc",
+    })
+    assert res.status_code == 400
+    assert "at least 6 characters" in res.json()["detail"]
 
 
 def test_login_success(client: TestClient):
