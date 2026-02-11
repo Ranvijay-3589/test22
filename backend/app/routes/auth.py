@@ -7,7 +7,7 @@ import hmac
 
 from ..database import get_db
 from ..models.user import User
-from ..schemas.auth import LoginRequest, RegisterRequest, ChangePasswordRequest, UserResponse, TokenResponse
+from ..schemas.auth import LoginRequest, ChangePasswordRequest, UserResponse, TokenResponse
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -54,33 +54,6 @@ def get_current_user(
             detail="User not found",
         )
     return user
-
-
-@router.post("/register", response_model=TokenResponse, status_code=201)
-def register(data: RegisterRequest, db: Session = Depends(get_db)):
-    existing = db.query(User).filter(
-        (User.username == data.username) | (User.email == data.email)
-    ).first()
-    if existing:
-        if existing.username == data.username:
-            raise HTTPException(status_code=400, detail="Username already taken")
-        raise HTTPException(status_code=400, detail="Email already registered")
-
-    user = User(
-        username=data.username,
-        email=data.email,
-        full_name=data.full_name,
-        hashed_password=hash_password(data.password),
-    )
-    db.add(user)
-    db.commit()
-    db.refresh(user)
-
-    token = create_token(user.id)
-    return TokenResponse(
-        access_token=token,
-        user=UserResponse.model_validate(user),
-    )
 
 
 @router.post("/login", response_model=TokenResponse)

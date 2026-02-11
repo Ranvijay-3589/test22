@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
-import { loginUser, registerUser, logoutUser, getCurrentUser } from "../services/api";
+import { loginUser, logoutUser, getCurrentUser } from "../services/api";
 
 interface User {
   id: number;
@@ -15,7 +15,6 @@ interface AuthContextType {
   loading: boolean;
   error: string | null;
   login: (username: string, password: string) => Promise<void>;
-  register: (username: string, email: string, fullName: string, password: string) => Promise<void>;
   logout: () => void;
   clearError: () => void;
 }
@@ -56,20 +55,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const register = async (username: string, email: string, fullName: string, password: string) => {
-    try {
-      const res = await registerUser(username, email, fullName, password);
-      localStorage.setItem("token", res.access_token);
-      setToken(res.access_token);
-      setUser(res.user);
-      setError(null);
-    } catch (err: any) {
-      const msg = err.response?.data?.detail || "Registration failed";
-      setError(msg);
-      throw err;
-    }
-  };
-
   const logout = () => {
     if (token) {
       logoutUser(token).catch(() => {});
@@ -82,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const clearError = () => setError(null);
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, error, login, register, logout, clearError }}>
+    <AuthContext.Provider value={{ user, token, loading, error, login, logout, clearError }}>
       {children}
     </AuthContext.Provider>
   );

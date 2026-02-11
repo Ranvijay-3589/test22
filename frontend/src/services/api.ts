@@ -21,9 +21,6 @@ interface TokenResponse {
 export const loginUser = (username: string, password: string) =>
   api.post<TokenResponse>("/auth/login", { username, password }).then((r) => r.data);
 
-export const registerUser = (username: string, email: string, full_name: string, password: string) =>
-  api.post<TokenResponse>("/auth/register", { username, email, full_name, password }).then((r) => r.data);
-
 export const getCurrentUser = (token: string) =>
   api.get<AuthUser>("/auth/me", { params: { token } }).then((r) => r.data);
 

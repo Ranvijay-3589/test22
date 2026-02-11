@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 
-interface LoginProps {
-  onSwitchToSignup: () => void;
-}
-
-function Login({ onSwitchToSignup }: LoginProps) {
+function Login() {
   const { login, error, clearError } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -63,15 +59,6 @@ function Login({ onSwitchToSignup }: LoginProps) {
             {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
-
-        <div className="login-footer">
-          <p>
-            Don't have an account?{" "}
-            <button type="button" className="link-btn" onClick={onSwitchToSignup}>
-              Sign Up
-            </button>
-          </p>
-        </div>
       </div>
     </div>
   );

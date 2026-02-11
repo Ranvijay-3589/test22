@@ -6,13 +6,6 @@ class LoginRequest(BaseModel):
     password: str
 
 
-class RegisterRequest(BaseModel):
-    username: str
-    email: str
-    full_name: str
-    password: str
-
-
 class UserResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
