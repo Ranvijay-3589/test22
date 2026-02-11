@@ -1,43 +1,12 @@
-import { useState } from 'react'
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
-import Login from './pages/Login'
 import './App.css'
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
-    return localStorage.getItem('sm-authenticated') === 'true'
-  })
-
-  const handleLogin = (email: string, password: string) => {
-    const isValid = email.trim().length > 0 && password.trim().length > 0
-    if (!isValid) {
-      return false
-    }
-
-    localStorage.setItem('sm-authenticated', 'true')
-    setIsAuthenticated(true)
-    return true
-  }
-
-  const handleLogout = () => {
-    localStorage.removeItem('sm-authenticated')
-    setIsAuthenticated(false)
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="*" element={<Navigate to="/login" replace />} />
-      </Routes>
-    )
-  }
-
   return (
     <div className="app">
       <aside className="sidebar">
@@ -62,9 +31,6 @@ function App() {
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
         </nav>
-        <button type="button" className="sidebar-logout" onClick={handleLogout}>
-          Logout
-        </button>
       </aside>
       <main className="main-content">
         <Routes>
@@ -73,7 +39,6 @@ function App() {
           <Route path="/teachers" element={<Teachers />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/subjects" element={<Subjects />} />
-          <Route path="/login" element={<Navigate to="/" replace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
