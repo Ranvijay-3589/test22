@@ -1,12 +1,24 @@
-import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { Routes, Route, NavLink, Navigate, useLocation } from 'react-router-dom'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
+import SignUp from './pages/SignUp'
 import './App.css'
 
 function App() {
+  const location = useLocation()
+  const isAuthPage = location.pathname === '/signup'
+
+  if (isAuthPage) {
+    return (
+      <Routes>
+        <Route path="/signup" element={<SignUp />} />
+      </Routes>
+    )
+  }
+
   return (
     <div className="app">
       <aside className="sidebar">
