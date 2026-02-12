@@ -1,7 +1,4 @@
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './contexts/AuthContext'
-import Login from './pages/Login'
-import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
@@ -9,9 +6,7 @@ import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
 import './App.css'
 
-function AppLayout() {
-  const { user, logout } = useAuth()
-
+function App() {
   return (
     <div className="app">
       <aside className="sidebar">
@@ -36,18 +31,6 @@ function AppLayout() {
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
         </nav>
-        <div className="sidebar-footer">
-          <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>
-            {user?.email}
-          </div>
-          <button
-            onClick={logout}
-            className="btn btn-sm"
-            style={{ background: 'rgba(255,255,255,0.1)', color: '#e2e8f0', width: '100%', justifyContent: 'center' }}
-          >
-            Sign Out
-          </button>
-        </div>
       </aside>
       <main className="main-content">
         <Routes>
@@ -60,33 +43,6 @@ function AppLayout() {
         </Routes>
       </main>
     </div>
-  )
-}
-
-function AuthPages() {
-  const { authPage } = useAuth()
-
-  if (authPage === 'signup') {
-    return <Signup />
-  }
-  return <Login />
-}
-
-function AppRoutes() {
-  const { isAuthenticated } = useAuth()
-
-  if (!isAuthenticated) {
-    return <AuthPages />
-  }
-
-  return <AppLayout />
-}
-
-function App() {
-  return (
-    <AuthProvider>
-      <AppRoutes />
-    </AuthProvider>
   )
 }
 

@@ -384,38 +384,3 @@ tr:hover {
   to { transform: rotate(360deg); }
 }
 
-.sidebar-footer {
-  border-top: 1px solid rgba(255,255,255,0.1);
-  padding: 1rem 1.25rem;
-}
-
-.login-page {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
-  background: radial-gradient(circle at top right, #dbeafe 0%, #f0f2f5 45%, #e2e8f0 100%);
-}
-
-.login-card {
-  width: 100%;
-  max-width: 420px;
-  background: #ffffff;
-  border-radius: 16px;
-  padding: 2rem;
-  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.12);
-  border: 1px solid #e2e8f0;
-}
-
-.login-card h1 {
-  font-size: 1.6rem;
-  color: #1a1a2e;
-  margin-bottom: 0.25rem;
-}
-
-.login-card p {
-  color: #64748b;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
-}
