@@ -1,6 +1,7 @@
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
@@ -62,15 +63,20 @@ function AppLayout() {
   )
 }
 
+function AuthPages() {
+  const { authPage } = useAuth()
+
+  if (authPage === 'signup') {
+    return <Signup />
+  }
+  return <Login />
+}
+
 function AppRoutes() {
   const { isAuthenticated } = useAuth()
 
   if (!isAuthenticated) {
-    return (
-      <Routes>
-        <Route path="*" element={<Login />} />
-      </Routes>
-    )
+    return <AuthPages />
   }
 
   return <AppLayout />

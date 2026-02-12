@@ -1,10 +1,12 @@
 import { useState, FormEvent } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 
-export default function Login() {
-  const { login, setAuthPage } = useAuth()
+export default function Signup() {
+  const { signup, setAuthPage } = useAuth()
+  const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -12,17 +14,38 @@ export default function Login() {
     e.preventDefault()
     setError('')
 
+    if (!name.trim()) {
+      setError('Please enter your full name.')
+      return
+    }
+
     if (!email || !password) {
-      setError('Please enter both email and password.')
+      setError('Please fill in all fields.')
+      return
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.')
+      return
+    }
+
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters long.')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setError('Passwords do not match.')
       return
     }
 
     setLoading(true)
-    const success = await login(email, password)
+    const result = await signup(name.trim(), email, password)
     setLoading(false)
 
-    if (!success) {
-      setError('Invalid email or password. Try admin@school.com / admin123')
+    if (!result.success) {
+      setError(result.message || 'Signup failed. Please try again.')
     }
   }
 
@@ -31,22 +54,33 @@ export default function Login() {
       <div className="login-card">
         <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
           <div style={{ fontSize: '2.5rem', marginBottom: '0.5rem' }}>🏫</div>
-          <h1>School Management</h1>
-          <p>Sign in to your account</p>
+          <h1>Create Account</h1>
+          <p>Sign up for School Management</p>
         </div>
 
         {error && <div className="error-message">{error}</div>}
 
         <form onSubmit={handleSubmit}>
           <div className="form-group">
+            <label htmlFor="name">Full Name</label>
+            <input
+              id="name"
+              type="text"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              autoFocus
+            />
+          </div>
+
+          <div className="form-group">
             <label htmlFor="email">Email</label>
             <input
               id="email"
               type="email"
-              placeholder="admin@school.com"
+              placeholder="you@school.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              autoFocus
             />
           </div>
 
@@ -55,9 +89,20 @@ export default function Login() {
             <input
               id="password"
               type="password"
-              placeholder="Enter your password"
+              placeholder="At least 6 characters"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Re-enter your password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </div>
 
@@ -67,15 +112,15 @@ export default function Login() {
             disabled={loading}
             style={{ marginTop: '0.5rem', padding: '0.65rem 1rem' }}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
 
         <div style={{ textAlign: 'center', marginTop: '1.5rem', fontSize: '0.9rem', color: '#64748b' }}>
-          Don't have an account?{' '}
+          Already have an account?{' '}
           <button
             type="button"
-            onClick={() => setAuthPage('signup')}
+            onClick={() => setAuthPage('login')}
             style={{
               background: 'none',
               border: 'none',
@@ -86,12 +131,8 @@ export default function Login() {
               padding: 0,
             }}
           >
-            Sign Up
+            Sign In
           </button>
-        </div>
-
-        <div style={{ textAlign: 'center', marginTop: '0.75rem', fontSize: '0.8rem', color: '#94a3b8' }}>
-          Demo: admin@school.com / admin123
         </div>
       </div>
     </div>
