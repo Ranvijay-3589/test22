@@ -68,4 +68,11 @@ export const updateSubject = (id: number, data: Record<string, unknown>) =>
 export const deleteSubject = (id: number) =>
   api.delete(`/subjects/${id}`)
 
+// --- Auth ---
+export const loginUser = (data: { username: string; password: string }) =>
+  api.post('/auth/login', data)
+
+export const registerUser = (data: { username: string; email: string; password: string; full_name?: string }) =>
+  api.post('/auth/register', data)
+
 export default api
