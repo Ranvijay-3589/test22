@@ -1,23 +1,8 @@
 import axios from 'axios'
 
 const api = axios.create({
-  baseURL: 'http://localhost:8000/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? '/api',
 })
-
-export interface LoginPayload {
-  username: string
-  password: string
-}
-
-export interface LoginResponse {
-  access_token: string
-  user: {
-    id: number
-    username: string
-    email: string
-    full_name: string | null
-  }
-}
 
 // --- Students ---
 export const getStudents = (search?: string) =>
@@ -82,9 +67,5 @@ export const updateSubject = (id: number, data: Record<string, unknown>) =>
 
 export const deleteSubject = (id: number) =>
   api.delete(`/subjects/${id}`)
-
-// --- Auth ---
-export const login = (payload: LoginPayload) =>
-  api.post<LoginResponse>('/auth/login', payload)
 
 export default api
