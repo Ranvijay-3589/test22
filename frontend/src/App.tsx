@@ -1,4 +1,6 @@
 import { Routes, Route, NavLink, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import Students from './pages/Students'
 import Teachers from './pages/Teachers'
@@ -6,7 +8,9 @@ import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
 import './App.css'
 
-function App() {
+function AppLayout() {
+  const { user, logout } = useAuth()
+
   return (
     <div className="app">
       <aside className="sidebar">
@@ -31,6 +35,18 @@ function App() {
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
         </nav>
+        <div className="sidebar-footer">
+          <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '0.5rem' }}>
+            {user?.email}
+          </div>
+          <button
+            onClick={logout}
+            className="btn btn-sm"
+            style={{ background: 'rgba(255,255,255,0.1)', color: '#e2e8f0', width: '100%', justifyContent: 'center' }}
+          >
+            Sign Out
+          </button>
+        </div>
       </aside>
       <main className="main-content">
         <Routes>
@@ -43,6 +59,28 @@ function App() {
         </Routes>
       </main>
     </div>
+  )
+}
+
+function AppRoutes() {
+  const { isAuthenticated } = useAuth()
+
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="*" element={<Login />} />
+      </Routes>
+    )
+  }
+
+  return <AppLayout />
+}
+
+function App() {
+  return (
+    <AuthProvider>
+      <AppRoutes />
+    </AuthProvider>
   )
 }
 
