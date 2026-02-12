@@ -7,6 +7,7 @@ import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
+import Test from './pages/Test'
 import './App.css'
 
 function App() {
@@ -53,6 +54,9 @@ function App() {
           <NavLink to="/subjects">
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
+          <NavLink to="/test">
+            <span className="icon">&#x1F9EA;</span> Test
+          </NavLink>
         </nav>
         <div className="sidebar-footer">
           <div className="user-info">
@@ -70,6 +74,7 @@ function App() {
           <Route path="/teachers" element={<Teachers />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/subjects" element={<Subjects />} />
+          <Route path="/test" element={<Test />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
