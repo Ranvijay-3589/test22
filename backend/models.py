@@ -40,17 +40,6 @@ class Student(Base):
     student_class = relationship("Class", back_populates="students")
 
 
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, nullable=False, index=True)
-    email = Column(String, unique=True, nullable=False)
-    full_name = Column(String, nullable=False)
-    hashed_password = Column(String, nullable=False)
-    role = Column(String, default="admin")
-
-
 class Subject(Base):
     __tablename__ = "subjects"
 
