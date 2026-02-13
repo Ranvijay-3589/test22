@@ -5,7 +5,6 @@ import Students from './pages/Students'
 import Teachers from './pages/Teachers'
 import Classes from './pages/Classes'
 import Subjects from './pages/Subjects'
-import Test4 from './pages/Test4'
 import Test5 from './pages/Test5'
 import Login from './pages/Login'
 import SignUp from './pages/SignUp'
@@ -55,9 +54,6 @@ function App() {
           <NavLink to="/subjects">
             <span className="icon">&#x1F4DA;</span> Subjects
           </NavLink>
-          <NavLink to="/test4">
-            <span className="icon">&#x1F9EA;</span> Test4
-          </NavLink>
           <NavLink to="/test5">
             <span className="icon">&#x1F9EA;</span> Test5
           </NavLink>
@@ -78,7 +74,6 @@ function App() {
           <Route path="/teachers" element={<Teachers />} />
           <Route path="/classes" element={<Classes />} />
           <Route path="/subjects" element={<Subjects />} />
-          <Route path="/test4" element={<Test4 />} />
           <Route path="/test5" element={<Test5 />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
