@@ -32,6 +32,11 @@ def health_check():
     return {"status": "healthy"}
 
 
+@app.get("/hello")
+def hello():
+    return {"message": "hello"}
+
+
 @app.get("/api")
 def api_root():
     return {
